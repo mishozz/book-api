@@ -21,6 +21,6 @@ app.get('/health',(_req,res) => {
     res.status(503).send()
 });
 
-mongoose.connect(process.env.DB_CONNECTION,);
+mongoose.connect(process.env.DB_CONNECTION);
 
 app.listen(3000);

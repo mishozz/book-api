@@ -21,24 +21,35 @@ router.get('/:isbn', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    console.log(req.body);
-    const book = new Book({
+    const bookToBeCreated = new Book({
         isbn: req.body.isbn,
         description: req.body.description,
         availableCopies: req.body.availableCopies
     })
     
     try{
-        const savedBook = await book.save();
+        const books = await Book.find({isbn: bookToBeCreated.isbn});
+        if(books.length !== 0) {
+            res.status(409).send();
+            return;
+        }
+
+        const savedBook = await bookToBeCreated.save();
         res.json(savedBook);
     } catch(err) {
+        console.log(err)
         res.json({message: err}).status(500);
     }
 })
 
 router.delete('/:isbn', async (req, res) => { 
     try{
-        await Book.remove({isbn: req.params.isbn});
+        const books = await Book.find({isbn: req.params.isbn});
+        if(books.length === 0) {
+            res.status(404).json({message: "Book not found"});
+            return;
+        }
+        await Book.deleteOne({isbn: req.params.isbn});
         res.status(204).send()
     } catch(err) {
         res.json({message: err}).status(500);
