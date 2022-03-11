@@ -1,6 +1,7 @@
 import express from 'express';
-const router = express.Router();
 import Book from '../model/books.js'
+
+const router = express.Router();
 
 router.get('/', async (_req, res) => {
     try {
@@ -20,22 +21,22 @@ router.get('/:isbn', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
-    const bookToBeCreated = new Book({
-        isbn: req.body.isbn,
-        description: req.body.description,
-        availableCopies: req.body.availableCopies
-    })
-    
+router.post('/', async (req, res) => {   
     try{
-        const books = await Book.find({isbn: bookToBeCreated.isbn});
-        if(books.length !== 0) {
+        let book = await Book.findOne({isbn: bookToBeCreated.isbn});
+        if(book) {
             res.status(409).send();
             return;
         }
 
-        const savedBook = await bookToBeCreated.save();
-        res.json(savedBook);
+        book = new Book({
+            isbn: req.body.isbn,
+            description: req.body.description,
+            availableCopies: req.body.availableCopies
+        })
+
+        await book.save();
+        res.json(book);
     } catch(err) {
         console.log(err)
         res.json({message: err}).status(500);
