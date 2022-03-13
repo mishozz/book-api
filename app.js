@@ -2,8 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser'
 import {} from 'dotenv/config';
-import {router as bookRouter} from './router/bookResourceApi.js';
-import {router as userRouter} from './router/userResourceApi.js';
+import {router as bookRouter} from './router/bookRouter.js';
+import {router as userRouter} from './router/userRouter.js';
 
 const app = express();
 
@@ -25,3 +25,6 @@ app.get('/health',(_req,res) => {
 mongoose.connect(process.env.DB_CONNECTION);
 
 app.listen(3000);
+
+// for testing
+export default app
