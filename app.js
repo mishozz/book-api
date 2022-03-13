@@ -26,5 +26,5 @@ mongoose.connect(process.env.DB_CONNECTION);
 
 app.listen(3000);
 
-// for testing
+// for testin
 export default app
