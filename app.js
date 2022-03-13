@@ -25,6 +25,3 @@ app.get('/health',(_req,res) => {
 mongoose.connect(process.env.DB_CONNECTION);
 
 app.listen(3000);
-
-// for testin
-export default app
