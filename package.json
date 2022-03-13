@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon app.js",
-    "test": "jest --testTimeout=100000 --runInBand ./tests"
+    "test": "jest --runInBand ./tests"
   },
   "jest": {
     "transform": {

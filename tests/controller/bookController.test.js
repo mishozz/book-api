@@ -1,12 +1,9 @@
-import DbHandler from './dbHandler.js'
-import BookController from '../controller/bookController.js'
+import BookController from '../../controller/bookController.js'
 import mocks from 'node-mocks-http'
 import * as mockingoose from 'mockingoose'
-import Book from '../model/books.js'
-import http from 'http'
+import Book from '../../model/books.js'
 import { expect } from 'chai'
 
-const dbHandler = new DbHandler()
 const bookController = new BookController();
 
 beforeEach(() => {
