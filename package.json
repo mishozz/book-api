@@ -5,7 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "test": "jest --testTimeout=100000 --runInBand ./tests"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   },
   "repository": {
     "type": "git",
@@ -14,10 +20,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/preset-env": "^7.16.11",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.2",
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "mongoose": "^6.2.5"
+    "jest": "^27.5.1",
+    "mockingoose": "^2.15.2",
+    "mongodb-memory-server": "^8.4.0",
+    "mongoose": "^6.2.5",
+    "node-mocks-http": "^1.11.0"
+  },
+  "devDependencies": {
+    "babel-jest": "^27.5.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "regenerator-runtime": "^0.11.1"
   }
 }
