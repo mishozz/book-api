@@ -12,7 +12,11 @@ const Book = mongoose.Schema({
     availableCopies: {
         type: Number,
         required: true
-    }
+    },
+    users:[{
+        type: mongoose.Types.ObjectId,
+        ref: "Users"
+    }]
 })
 
 export default mongoose.model('Books', Book);

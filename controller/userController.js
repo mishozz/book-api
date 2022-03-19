@@ -1,4 +1,3 @@
-import express from 'express';
 import bcrypt from 'bcrypt'
 import Book from '../model/books.js'
 import User from '../model/user.js'
@@ -63,6 +62,80 @@ class UserController {
             return res.json({message: err}).status(500);
         }
     }
+
+    handleBookActions = async(req,res) => {
+        let query = req.query.action;
+        if(query === 'take') {
+            return this.takeBook(req,res);
+        } else if (query === 'return') {
+            return this.returnBook(req,res);
+        } else {
+            return res.status(400).send({message: 'The only allowed actions are: take and return'})
+        }
+    }
+
+    takeBook = async(req, res) => {
+        try{
+            let book = await Book.findOne({isbn: req.body.isbn});
+            if(!book) {
+                return res.status(404).send();
+            }
+
+            // Change later to get username from token!!!
+            let user = await User.findOne({username: req.body.username});
+            if(!user) {
+                return res.status(404).send();
+            }
+
+            if(user.takenBooks.includes(book._id)) {
+                return res.status(409).send({message: 'Book is already taken by this user'});
+            }
+            
+            if(book.availableCopies <= 0) {
+                return res.status(400).send({message: 'No available copies left'})
+            }
+
+            await Book.findOneAndUpdate({ '_id': book._id }, { $addToSet: { users: user._id },  $set: { availableCopies: --book.availableCopies}});
+            await User.findOneAndUpdate({ '_id': user._id }, { $addToSet: { takenBooks: book._id }});
+            await User.findOneAndUpdate({ '_id': user._id }, { $pull: { returnedBooks: book._id }});
+
+            return res.status(200).send();
+        } catch (err) {
+            return res.status(500).json({message: err});
+        }
+    }
+
+    returnBook = async(req, res) => {
+        try{
+            let book = await Book.findOne({isbn: req.body.isbn});
+            if(!book) {
+                return res.status(404).send();
+            }
+
+            // Change later to get username from token!!!
+            let user = await User.findOne({username: req.body.username});
+            if(!user) {
+                return res.status(404).send();
+            }
+
+            console.log("username " +user.username)
+            console.log("Taken books " +user.takenBooks)
+            console.log('Book id ' + book._id)
+            if(!user.takenBooks.includes(book._id)) {
+                return res.status(400).send({message: 'The user does not own this book'});
+            }
+
+            await Book.findOneAndUpdate({ '_id': book._id }, { $pull: { users: user._id }, availableCopies: ++book.availableCopies});
+            await User.findOneAndUpdate({ '_id': user._id }, { $pull: { takenBooks: book._id }});
+            await User.findOneAndUpdate({ '_id': user._id }, { $addToSet: { returnedBooks: book._id }});
+
+            return res.status(200).send();
+        } catch (err) {
+            return res.status(500).json({message: err});
+        }
+    }
 }
+
+
 
 export default UserController

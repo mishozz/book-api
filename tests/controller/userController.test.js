@@ -2,6 +2,7 @@ import UserController from '../../controller/userController.js'
 import mocks from 'node-mocks-http'
 import * as mockingoose from 'mockingoose'
 import User from '../../model/user.js'
+import Book from '../../model/books.js'
 import { expect } from 'chai'
 import bcrypt from 'bcrypt'
 
@@ -163,5 +164,127 @@ describe('getAll', () => {
 
         expect(res._getJSONData().length).equal(2);
         expect(res.statusCode).equal(200);
+    });
+});
+
+describe('handleBookActions', () => {
+    it('take book success', async () => {
+        mockingoose(User).toReturn({
+            username: 'test-username',
+            password: 'test-password'
+        },
+        'findOne');
+        mockingoose(Book).toReturn(
+            {
+              _id: 'id',
+              isbn: 'test-isbn',
+              description:"test-desc",
+              availableCopies: 10,
+            },
+        'findOne');
+    
+        let req = {
+            query:{action: 'take'},
+            body: {
+                username:'test-username',
+                isbn:'test-isbn'
+            }
+        };
+
+        let res = mocks.createResponse();
+        res = await userController.handleBookActions(req, res);
+
+        expect(res.statusCode).equal(200);
+    });
+
+    it('take book - no available copies', async () => {
+        mockingoose(User).toReturn({
+            username: 'test-username',
+            password: 'test-password'
+        },
+        'findOne');
+        mockingoose(Book).toReturn(
+            {
+              _id: 'id',
+              isbn: 'test-isbn',
+              description:"test-desc",
+              availableCopies: 0,
+            },
+        'findOne');
+    
+        let req = {
+            query:{action: 'take'},
+            body: {
+                username:'test-username',
+                isbn:'test-isbn'
+            }
+        };
+
+        let res = mocks.createResponse();
+        res = await userController.handleBookActions(req, res);
+
+        expect(res.statusCode).equal(400);
+    });
+
+    it('take book - book does not exists', async () => {
+        mockingoose(User).toReturn({
+            username: 'test-username',
+            password: 'test-password'
+        },
+        'findOne');
+    
+        let req = {
+            query:{action: 'take'},
+            body: {
+                username:'test-username',
+                isbn:'test-isbn'
+            }
+        };
+
+        let res = mocks.createResponse();
+        res = await userController.handleBookActions(req, res);
+
+        expect(res.statusCode).equal(404);
+    });
+
+    // it('return book success', async () => {
+    //     mockingoose(User).toReturn({
+    //         username: 'test-username',
+    //         password: 'test-password',
+    //         takenBooks: ['id']
+    //     },
+    //     'findOne');
+    //     mockingoose(Book).toReturn(
+    //         {
+    //           _id: 'id',
+    //           isbn: 'test-isbn',
+    //           description:"test-desc",
+    //           availableCopies: 10,
+    //         },
+    //     'findOne');
+    
+    //     let req = {
+    //         query:{action: 'return'},
+    //         body: {
+    //             username:'test-username',
+    //             isbn:'test-isbn'
+    //         }
+    //     };
+
+    //     let res = mocks.createResponse();
+    //     res = await userController.handleBookActions(req, res);
+
+    //     expect(res.statusCode).equal(200);
+    // });
+
+    it('no such action: bad request', async () => {  
+        let req = {
+            query:{action: 'wrong_action'}
+        };
+
+        let res = mocks.createResponse();
+        res = await userController.handleBookActions(req, res);
+
+        expect(res.statusCode).equal(400);
     });
 });

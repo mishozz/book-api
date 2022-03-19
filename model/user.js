@@ -10,14 +10,14 @@ const User = mongoose.Schema({
         type: String,
         required: true
     },
-    takenBooks: {
+    takenBooks: [{
         type: mongoose.Types.ObjectId,
-        ref: 'Book'
-    },
-    returnedBooks: {
+        ref: 'Books'
+    }],
+    returnedBooks: [{
         type: mongoose.Types.ObjectId,
-        ref: 'Book'
-    }
+        ref: 'Books'
+    }]
 })
 
 export default mongoose.model('Users', User)

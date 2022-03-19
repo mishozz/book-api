@@ -15,4 +15,6 @@ router.post('/register', userController.register);
 
 router.post('/login', userController.login);
 
+router.post('/books', userController.handleBookActions);
+
 export {router};
