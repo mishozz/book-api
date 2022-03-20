@@ -1,11 +1,10 @@
 import express from 'express';
-import bcrypt from 'bcrypt'
-import Book from '../model/books.js'
-import User from '../model/user.js'
 import UserController from '../controller/userController.js';
+import AuthClient from '../middleware/auth.js'
 
 const router = express.Router();
 const userController = new UserController();
+const authClient = new AuthClient();
 
 router.get('/', userController.getAll);
 

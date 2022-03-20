@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken';
 import Book from '../model/books.js'
 import User from '../model/user.js'
 
@@ -14,8 +15,11 @@ class UserController {
             if (!validPassword) {
                 return res.status(400).json({message: 'Incorrect username or password.'});
             }
+            let token = jwt.sign({ username: user.username }, process.env.PRIVATE_KEY, { //later get key from env
+                expiresIn: 86400 // 24 hours
+            });
     
-            return res.send();
+            return res.json({ token: token});
         } catch (err) {
             return res.status(500).json({message: err});
         }
