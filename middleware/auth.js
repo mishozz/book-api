@@ -1,6 +1,11 @@
+import jwt from 'jsonwebtoken'
+
 class AuthClient {
     verifyToken = (req, res, next) => {
-        let token = req.headers["x-access-token"];
+        let token;
+        if (req.headers.authorization && req.headers.authorization.split(" ")[0] === "Bearer") {
+            token = req.headers.authorization.split(" ")[1];
+        } 
         if (!token) {
           return res.status(403).send({
             message: "No token provided!"
@@ -12,26 +17,20 @@ class AuthClient {
               message: "Unauthorized!"
             });
           }
-          //req.userId = decoded.id;
+          req.username = decoded.username;
+          req.role = decoded.role;
           next();
         });
       };
 
-      isAdmin = (req, res, next) => {
-        User.findByPk(req.userId).then(user => {
-          user.getRoles().then(roles => {
-            for (let i = 0; i < roles.length; i++) {
-              if (roles[i].name === "admin") {
-                next();
-                return;
-              }
-            }
-            res.status(403).send({
-              message: "Require Admin Role!"
-            });
-            return;
-          });
-        });
+      isUser = (req, res, next) => {
+        if (req.role != 'USER') {
+            return res.status(401).send({
+                message: "Unauthorized!"
+              }); 
+        }
+        console.log(req.username + " " + req.role)
+        next();
       };
 
 }

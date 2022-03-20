@@ -8,12 +8,12 @@ const authClient = new AuthClient();
 
 router.get('/', userController.getAll);
 
-router.get('/:username', userController.getPerson);
+router.get('/:username',[authClient.verifyToken, authClient.isUser], userController.getPerson);
 
 router.post('/register', userController.register);
 
 router.post('/login', userController.login);
 
-router.post('/books', userController.handleBookActions);
+router.post('/books', [authClient.verifyToken, authClient.isUser], userController.handleBookActions);
 
 export {router};

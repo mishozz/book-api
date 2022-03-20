@@ -15,7 +15,7 @@ class UserController {
             if (!validPassword) {
                 return res.status(400).json({message: 'Incorrect username or password.'});
             }
-            let token = jwt.sign({ username: user.username }, process.env.PRIVATE_KEY, { //later get key from env
+            let token = jwt.sign({ username: user.username , role: user.role}, process.env.PRIVATE_KEY, { //later get key from env
                 expiresIn: 86400 // 24 hours
             });
     
@@ -34,7 +34,8 @@ class UserController {
         
             user = new User({
                 username: req.body.username,
-                password: req.body.password
+                password: req.body.password,
+                role: 'USER'
             });
     
             const salt = await bcrypt.genSalt(10);
@@ -85,8 +86,7 @@ class UserController {
                 return res.status(404).send();
             }
 
-            // Change later to get username from token!!!
-            let user = await User.findOne({username: req.body.username});
+            let user = await User.findOne({username: req.username});
             if(!user) {
                 return res.status(404).send();
             }
@@ -116,8 +116,7 @@ class UserController {
                 return res.status(404).send();
             }
 
-            // Change later to get username from token!!!
-            let user = await User.findOne({username: req.body.username});
+            let user = await User.findOne({username: req.username});
             if(!user) {
                 return res.status(404).send();
             }
