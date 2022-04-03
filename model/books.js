@@ -13,6 +13,10 @@ const Book = mongoose.Schema({
         type: Number,
         required: true
     },
+    imageSource:{
+        type: String,
+        required: true
+    },
     users:[{
         type: mongoose.Types.ObjectId,
         ref: "Users"

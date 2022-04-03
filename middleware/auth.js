@@ -29,9 +29,17 @@ class AuthClient {
                 message: "Unauthorized!"
               }); 
         }
-        console.log(req.username + " " + req.role)
         next();
       };
+
+      isCommentOwner = (req, res, next) => {
+        if(req.username != req.body.from) {
+          return res.status(401).send({
+            message: "Unauthorized!"
+          });
+        }
+        next();
+      }
 
 }
 

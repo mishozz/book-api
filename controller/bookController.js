@@ -32,7 +32,8 @@ class BookController {
             book = new Book({
                 isbn: req.body.isbn,
                 description: req.body.description,
-                availableCopies: req.body.availableCopies
+                availableCopies: req.body.availableCopies,
+                imageSource: req.body.imageSource
             })
     
             await book.save();
