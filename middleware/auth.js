@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken'
 class AuthClient {
     verifyToken = (req, res, next) => {
         let token;
-        if (req.headers.authorization && req.headers.authorization.split(" ")[0] === "Bearer") {
-            token = req.headers.authorization.split(" ")[1];
-        } 
+        if(req.cookies.token) {
+          token = req.cookies.token; 
+        }
         if (!token) {
           return res.status(403).send({
             message: "No token provided!"
@@ -17,14 +17,14 @@ class AuthClient {
               message: "Unauthorized!"
             });
           }
-          req.username = decoded.username;
+          req.email = decoded.email;
           req.role = decoded.role;
           next();
         });
       };
 
-      isUser = (req, res, next) => {
-        if (req.role != 'USER') {
+      isUserOrAdmin = (req, res, next) => {
+        if (req.role != 'USER' && req.role != 'ADMIN') {
             return res.status(401).send({
                 message: "Unauthorized!"
               }); 
@@ -33,7 +33,7 @@ class AuthClient {
       };
 
       isCommentOwner = (req, res, next) => {
-        if(req.username != req.body.from) {
+        if(req.email != req.body.from) {
           return res.status(401).send({
             message: "Unauthorized!"
           });

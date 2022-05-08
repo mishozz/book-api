@@ -8,6 +8,18 @@ const Comment = mongoose.Schema({
     from: {
         type: String,
         required: true
+    },
+    parentId: {
+        type: String,
+    },
+    referenceBookIsbn : {
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        required: true
     }
 })
 

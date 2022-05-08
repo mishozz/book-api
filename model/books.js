@@ -5,6 +5,10 @@ const Book = mongoose.Schema({
         type: String,
         required: true
     },
+    title: {
+        type: String,
+        required: true
+    },
     description: {
         type: String,
         required: true
@@ -17,9 +21,15 @@ const Book = mongoose.Schema({
         type: String,
         required: true
     },
+    genre: {
+        type: String,
+        required: true
+    },
+    rating: {
+        type: Number
+    },
     users:[{
-        type: mongoose.Types.ObjectId,
-        ref: "Users"
+        type: String
     }]
 })
 

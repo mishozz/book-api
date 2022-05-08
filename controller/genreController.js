@@ -4,7 +4,7 @@ class GenreController {
     getAll = async (_req, res) => {
         try {
             const genres = await Genre.find();
-            return res.json(genres);
+            return res.json({genres:genres});
         } catch(err) {
             return res.json({message: err}).status(500);
         }
@@ -31,7 +31,6 @@ class GenreController {
     
             genre = new Genre({
                 name: req.body.name,
-                books: req.body.books
             })
     
             await genre.save();

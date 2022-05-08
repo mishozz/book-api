@@ -10,11 +10,11 @@ router.get('/', commentController.getAll);
 
 router.get('/:id', commentController.getComment);
 
-router.post('/',[authClient.verifyToken,authClient.isUser], commentController.createComment);
+router.post('/',[authClient.verifyToken,authClient.isUserOrAdmin], commentController.createComment);
 
-router.put('/:id',[authClient.verifyToken,authClient.isUser, authClient.isCommentOwner], commentController.editComment);
+router.put('/:id',[authClient.verifyToken,authClient.isUserOrAdmin], commentController.editComment);
 
-router.delete('/:id',[authClient.verifyToken,authClient.isUser, authClient.isCommentOwner], commentController.deleteComment);
+router.delete('/:id',[authClient.verifyToken,authClient.isUserOrAdmin], commentController.deleteComment);
 
 
 export {router};

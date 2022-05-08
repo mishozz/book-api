@@ -1,6 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser'
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import {} from 'dotenv/config';
 import {router as bookRouter} from './router/bookRouter.js';
 import {router as userRouter} from './router/userRouter.js';
@@ -8,8 +10,15 @@ import {router as commentRouter} from './router/commentRouter.js';
 import {router as genreRouter} from './router/genreRouter.js';
 
 const app = express();
+//const noCors = cors();
+
+const corsOptions  = {
+    origin: 'http://localhost:3001', //frontend url
+    credentials: true}
 
 app.use(express.json())
+app.use(cors(corsOptions));
+app.use(cookieParser())
 app.use(bodyParser.urlencoded({
     extended: true
   }));
@@ -28,4 +37,4 @@ app.get('/health',(_req,res) => {
 
 mongoose.connect(process.env.DB_CONNECTION);
 
-app.listen(3000);
+app.listen(process.env.PORT);

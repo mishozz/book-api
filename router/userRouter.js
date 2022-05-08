@@ -8,12 +8,18 @@ const authClient = new AuthClient();
 
 router.get('/', userController.getAll);
 
-router.get('/:username',[authClient.verifyToken, authClient.isUser], userController.getPerson);
+router.get('/takenbooks',[authClient.verifyToken, authClient.isUserOrAdmin], userController.getTakenBooks);
+
+router.get('/:email', userController.getPerson);
 
 router.post('/register', userController.register);
 
+router.post('/token', [authClient.verifyToken, authClient.isUserOrAdmin], userController.refreshToken)
+
 router.post('/login', userController.login);
 
-router.post('/books', [authClient.verifyToken, authClient.isUser], userController.handleBookActions);
+router.post('/logout', userController.logout);
+
+router.post('/books', [authClient.verifyToken, authClient.isUserOrAdmin], userController.handleBookActions);
 
 export {router};

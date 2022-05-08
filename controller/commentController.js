@@ -4,7 +4,7 @@ class CommentController {
     getAll = async (_req, res) => {
         try {
             const comments = await Comment.find();
-            return res.json(comments);
+            return res.json({comments: comments});
         } catch(err) {
             return res.json({message: err}).status(500);
         }
@@ -22,13 +22,20 @@ class CommentController {
         }
     }
 
-    createComment = async (req, res) => {   
+    createComment = async (req, res) => {  
+        let parentId = "";
+        if(req.body.parentId !== undefined) {
+            parentId = req.body.parentId;
+        }
+
         try{
             const comment = new Comment({
                 content: req.body.content,
-                from: req.username // get from token!!!
+                from: req.email,
+                parentId: parentId,
+                referenceBookIsbn: req.body.referenceBookIsbn,
+                createdAt: new Date()
             })
-    
             await comment.save();
             return res.json(comment).status(201);
         } catch(err) {
