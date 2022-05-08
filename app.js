@@ -8,6 +8,7 @@ import {router as bookRouter} from './router/bookRouter.js';
 import {router as userRouter} from './router/userRouter.js';
 import {router as commentRouter} from './router/commentRouter.js';
 import {router as genreRouter} from './router/genreRouter.js';
+import {router as ratingRouter} from './router/ratingRouter.js';
 
 const app = express();
 //const noCors = cors();
@@ -28,6 +29,7 @@ app.use('/books', bookRouter);
 app.use('/users', userRouter);
 app.use('/comments', commentRouter);
 app.use('/genres', genreRouter)
+app.use('/ratings', ratingRouter)
 app.get('/health',(_req,res) => {
     if (mongoose.connection.readyState === 1) {
         res.status(200).send();

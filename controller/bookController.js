@@ -1,5 +1,6 @@
 import Book from '../model/books.js'
 import crypto from 'crypto'
+import Rating from '../model/rating.js';
 
 class BookController {
     getAll = async (req, res) => {
@@ -99,6 +100,10 @@ class BookController {
                 imageSource: req.body.imageSource,
                 genre: req.body.genre
             })
+            const rating = new Rating({
+                referenceBookIsbn: book.isbn
+            })
+            await rating.save();
 
             await book.save();
             return res.json(book).status(201);
