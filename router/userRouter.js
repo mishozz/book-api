@@ -1,20 +1,25 @@
 import express from 'express';
-import bcrypt from 'bcrypt'
-import Book from '../model/books.js'
-import User from '../model/user.js'
 import UserController from '../controller/userController.js';
+import AuthClient from '../middleware/auth.js'
 
 const router = express.Router();
 const userController = new UserController();
+const authClient = new AuthClient();
 
 router.get('/', userController.getAll);
 
-router.get('/:username', userController.getPerson);
+router.get('/takenbooks',[authClient.verifyToken, authClient.isUserOrAdmin], userController.getTakenBooks);
+
+router.get('/:email', userController.getPerson);
 
 router.post('/register', userController.register);
 
+router.post('/token', [authClient.verifyToken, authClient.isUserOrAdmin], userController.refreshToken)
+
 router.post('/login', userController.login);
 
-router.post('/books', userController.handleBookActions);
+router.post('/logout', userController.logout);
+
+router.post('/books', [authClient.verifyToken, authClient.isUserOrAdmin], userController.handleBookActions);
 
 export {router};

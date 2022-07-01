@@ -16,7 +16,7 @@ describe('login', () => {
     it('success', async () => {
         let req = {
             body: {
-                username: 'test-name',
+                email: 'test-name',
                 password: 'test-123'
             }
         };
@@ -25,7 +25,7 @@ describe('login', () => {
         let encryptedPass = await bcrypt.hash(req.body.password, salt);
 
         mockingoose(User).toReturn({
-            username: 'test-name',
+            email: 'test-name',
             password: encryptedPass,
   
           },
@@ -40,13 +40,13 @@ describe('login', () => {
     it('wrong password', async () => {
         let req = {
             body: {
-                username: 'test-name',
+                email: 'test-name',
                 password: 'wrong-password'
             }
         };
 
         mockingoose(User).toReturn({
-            username: 'test-name',
+            email: 'test-name',
             password: "correct-password",
   
           },
@@ -56,13 +56,13 @@ describe('login', () => {
           res = await userController.login(req, res);
 
           expect(res.statusCode).equal(400);
-          expect(res._getJSONData().message).equal('Incorrect username or password.')
+          expect(res._getJSONData().message).equal('Incorrect email or password.')
     });
 
-    it('wrong username', async () => {
+    it('wrong email', async () => {
         let req = {
             body: {
-                username: 'test-name',
+                email: 'test-name',
                 password: 'wrong-password'
             }
         };
@@ -71,7 +71,7 @@ describe('login', () => {
           res = await userController.login(req, res);
 
           expect(res.statusCode).equal(400);
-          expect(res._getJSONData().message).equal('Incorrect username or password.')
+          expect(res._getJSONData().message).equal('Incorrect email or password.')
     });
 });
 
@@ -79,7 +79,7 @@ describe('register', () => {
     it('success', async () => {
         let req = {
             body: {
-                username: 'test-name',
+                email: 'test-name',
                 password: 'test-123'
             }
         };
@@ -93,13 +93,13 @@ describe('register', () => {
     it('user exists', async () => {
         let req = {
             body: {
-                username: 'test-name',
+                email: 'test-name',
                 password: 'test-123'
             }
         };
 
         mockingoose(User).toReturn({
-            username: 'test-name',
+            email: 'test-name',
             password: "test-password",
           },
          'findOne');
@@ -116,12 +116,12 @@ describe('getPerson', () => {
     it('success', async () => {
         let req = {
             params:{
-                username: "test-username"
+                email: "test-email"
             }
         };
 
         mockingoose(User).toReturn({
-            username: 'test-username',
+            email: 'test-email',
             password: 'test-password'
         },
         'findOne')
@@ -135,7 +135,7 @@ describe('getPerson', () => {
     it('not found', async () => {
         let req = {
             params:{
-                username: "test-username"
+                email: "test-email"
             }
         };
 
@@ -149,10 +149,10 @@ describe('getPerson', () => {
 describe('getAll', () => {
     it('success', async () => {
         mockingoose(User).toReturn([{
-            username: 'test-username',
+            email: 'test-email',
             password: 'test-password'
         }, {
-            username: 'test-username',
+            email: 'test-email',
             password: 'test-password'
         }],
         'find');
@@ -170,7 +170,7 @@ describe('getAll', () => {
 describe('handleBookActions', () => {
     it('take book success', async () => {
         mockingoose(User).toReturn({
-            username: 'test-username',
+            email: 'test-email',
             password: 'test-password'
         },
         'findOne');
@@ -186,7 +186,7 @@ describe('handleBookActions', () => {
         let req = {
             query:{action: 'take'},
             body: {
-                username:'test-username',
+                email:'test-email',
                 isbn:'test-isbn'
             }
         };
@@ -199,7 +199,7 @@ describe('handleBookActions', () => {
 
     it('take book - no available copies', async () => {
         mockingoose(User).toReturn({
-            username: 'test-username',
+            email: 'test-email',
             password: 'test-password'
         },
         'findOne');
@@ -215,7 +215,7 @@ describe('handleBookActions', () => {
         let req = {
             query:{action: 'take'},
             body: {
-                username:'test-username',
+                email:'test-email',
                 isbn:'test-isbn'
             }
         };
@@ -228,7 +228,7 @@ describe('handleBookActions', () => {
 
     it('take book - book does not exists', async () => {
         mockingoose(User).toReturn({
-            username: 'test-username',
+            email: 'test-email',
             password: 'test-password'
         },
         'findOne');
@@ -236,7 +236,7 @@ describe('handleBookActions', () => {
         let req = {
             query:{action: 'take'},
             body: {
-                username:'test-username',
+                email:'test-email',
                 isbn:'test-isbn'
             }
         };
@@ -249,7 +249,7 @@ describe('handleBookActions', () => {
 
     // it('return book success', async () => {
     //     mockingoose(User).toReturn({
-    //         username: 'test-username',
+    //         email: 'test-email',
     //         password: 'test-password',
     //         takenBooks: ['id']
     //     },
@@ -266,7 +266,7 @@ describe('handleBookActions', () => {
     //     let req = {
     //         query:{action: 'return'},
     //         body: {
-    //             username:'test-username',
+    //             email:'test-email',
     //             isbn:'test-isbn'
     //         }
     //     };

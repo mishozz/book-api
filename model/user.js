@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const User = mongoose.Schema({
-    username: {
+    email: {
         type: String,
         required: true,
         unique: true
@@ -10,13 +10,15 @@ const User = mongoose.Schema({
         type: String,
         required: true
     },
+    role: {
+        type: String,
+        required: true
+    },
     takenBooks: [{
-        type: mongoose.Types.ObjectId,
-        ref: 'Books'
+        type: String,
     }],
     returnedBooks: [{
-        type: mongoose.Types.ObjectId,
-        ref: 'Books'
+        type: String,
     }]
 })
 

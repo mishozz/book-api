@@ -25,7 +25,8 @@ describe('createBook', () => {
           body: {
             isbn:"test-isbn",
             description:"test-desc",
-            availableCopies:10
+            availableCopies:10,
+            imageSource: "source"
           }
         };
   
